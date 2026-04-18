@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Register</h2>
+
+<input id="email" placeholder="Email">
+<br>
+<input id="password" type="password" placeholder="Password">
+<br><br>
+
+<button onclick="register()">Register</button>
+
+<script>
+async function register(){
+  const res = await fetch("http://localhost:5000/register", {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+}
+</script>
+
+</body>
+</html>
