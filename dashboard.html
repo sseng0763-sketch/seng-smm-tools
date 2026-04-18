@@ -205,3 +205,92 @@ async function loadOrders(){
 setInterval(loadOrders, 5000);
 loadOrders();
 </script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+  <h2>SMM PANEL</h2>
+  <a href="#">Dashboard</a>
+  <a href="payment.html">Deposit</a>
+  <a href="#">Orders</a>
+  <a href="login.html">Logout</a>
+</div>
+
+<div class="main">
+
+  <h1>Dashboard</h1>
+
+  <div class="card">
+    <h3>Balance</h3>
+    <p id="balance">$0</p>
+  </div>
+
+  <div class="card">
+    <h3>New Order</h3>
+
+    <input id="service" placeholder="Service ID">
+    <input id="link" placeholder="Link">
+    <input id="qty" placeholder="Quantity">
+
+    <button onclick="order()">Place Order</button>
+  </div>
+
+  <div class="card" style="width: 90%;">
+    <h3>Orders</h3>
+    <ul id="orders"></ul>
+  </div>
+
+</div>
+
+<script>
+// load balance
+async function loadBalance(){
+  const res = await fetch("https://your-app.onrender.com/balance/" + localStorage.getItem("user"));
+  const data = await res.json();
+  document.getElementById("balance").innerText = "$" + data.balance;
+}
+
+// order
+async function order(){
+  const res = await fetch("https://your-app.onrender.com/order", {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: localStorage.getItem("user"),
+      service: service.value,
+      link: link.value,
+      quantity: qty.value
+    })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+  loadOrders();
+  loadBalance();
+}
+
+// load orders
+async function loadOrders(){
+  const res = await fetch("https://your-app.onrender.com/orders/" + localStorage.getItem("user"));
+  const data = await res.json();
+
+  let list = "";
+  data.forEach(o=>{
+    list += `<li>${o.service} | ${o.quantity} | ${o.status}</li>`;
+  });
+
+  document.getElementById("orders").innerHTML = list;
+}
+
+loadBalance();
+loadOrders();
+</script>
+
+</body>
+</html>
