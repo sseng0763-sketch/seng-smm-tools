@@ -79,3 +79,18 @@ async function loadOrders(){
 
 loadOrders();
 </script>
+<h3 id="balance"></h3>
+
+<script>
+async function loadBalance(){
+  const email = localStorage.getItem("user");
+
+  const res = await fetch("http://localhost:5000/balance/" + email);
+  const data = await res.json();
+
+  document.getElementById("balance").innerText =
+    "Balance: $" + data.balance;
+}
+
+loadBalance();
+</script>
