@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
 <body>
 
 <h2>Login</h2>
@@ -13,74 +18,42 @@
 
 <script>
 async function login(){
-  const res = await fetch("http://localhost:5000/login", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
 
-  const data = await res.json();
+  // check empty
+  if(!email.value || !password.value){
+    alert("Please fill all fields");
+    return;
+  }
 
-  if(data.message === "Login success"){
-    localStorage.setItem("user", email.value);
-    window.location.href = "dashboard.html";
-  } else {
-    alert(data.message);
+  try {
+    const res = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.message === "Login success"){
+      localStorage.setItem("user", email.value);
+      alert("Login success");
+
+      window.location.href = "dashboard.html";
+    } else {
+      alert(data.message);
+    }
+
+  } catch (err) {
+    alert("Server not running or wrong URL");
+    console.log(err);
   }
 }
 </script>
 
 </body>
 </html>
-<script>
-async function login(){
-  const res = await fetch("http://localhost:5000/login", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
-
-  const data = await res.json();
-
-  if(data.message === "Login success"){
-    localStorage.setItem("user", email.value);
-    localStorage.setItem("role", data.role);
-
-    if(data.role === "admin"){
-      window.location.href = "admin.html";
-    } else {
-      window.location.href = "dashboard.html";
-    }
-
-  } else {
-    alert(data.message);
-  }
-}
-</script>
-<script>
-async function login(){
-  const res = await fetch("http://localhost:5000/login", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
-
-  const data = await res.json();
-
-  if(data.token){
-    localStorage.setItem("token", data.token);
-    window.location.href = "dashboard.html";
-  } else {
-    alert(data.message);
-  }
-}
-</script>
