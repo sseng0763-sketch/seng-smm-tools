@@ -83,3 +83,24 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+<h2>Login</h2>
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<script>
+async function login() {
+  const res = await fetch("http://localhost:5000/api/auth/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+  localStorage.setItem("token", data.token);
+  alert("Logged in!");
+}
+</script>
