@@ -498,3 +498,34 @@ Amount: $${amount}`);
 
   res.json({message:"Payment auto approved"});
 });
+const Order = mongoose.model("Order", {
+  email: String,
+  service: String,
+  link: String,
+  quantity: Number,
+  orderId: String,
+  status: { type: String, default: "pending" }
+});
+async function checkStatus(orderId){
+  const res = await axios.post(API_URL, {
+    key: API_KEY,
+    action: "status",
+    order: orderId
+  });
+
+  return res.data.status; 
+}
+setInterval(async ()=>{
+  const orders = await Order.find({ status: "pending" });
+
+  for(let o of orders){
+    const newStatus = await checkStatus(o.orderId);
+
+    if(newStatus){
+      o.status = newStatus;
+      await o.save();
+    }
+  }
+
+  console.log("Orders updated...");
+}, 30000);
