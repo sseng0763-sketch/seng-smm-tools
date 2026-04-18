@@ -188,3 +188,42 @@ const Order = mongoose.model("Order", {
   status: { type: String, default: "pending" },
   date: { type: Date, default: Date.now }
 });
+app.post("/order", async (req,res)=>{
+  const {email, service, link, quantity} = req.body;
+
+  try{
+    // call SMM API
+    const apiRes = await axios.post(API_URL, {
+      key: API_KEY,
+      action: "add",
+      service,
+      link,
+      quantity
+    });
+
+    const orderId = apiRes.data.order;
+
+    // SAVE TO DATABASE
+    const newOrder = new Order({
+      email,
+      service,
+      link,
+      quantity,
+      orderId
+    });
+
+    await newOrder.save();
+
+    res.json({
+      message: "Order saved",
+      orderId: orderId
+    });
+
+  } catch(err){
+    res.json({error:"Order failed"});
+  }
+});
+app.get("/orders/:email", async (req,res)=>{
+  const orders = await Order.find({ email: req.params.email });
+  res.json(orders);
+});
