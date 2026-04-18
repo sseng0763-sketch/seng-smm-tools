@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Deposit Money</h2>
+
+<p>ABA / Wing QR here</p>
+
+<input id="amount" placeholder="Amount">
+<input id="image" placeholder="Screenshot URL">
+
+<button onclick="send()">Submit</button>
+
+<script>
+async function send(){
+  await fetch("https://your-app.onrender.com/payment", {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: localStorage.getItem("user"),
+      amount: Number(amount.value),
+      image: image.value
+    })
+  });
+
+  alert("Payment sent, wait admin approve");
+}
+</script>
+
+</body>
+</html>
