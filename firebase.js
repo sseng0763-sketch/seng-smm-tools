@@ -84,3 +84,65 @@ app.post("/ai", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running"));
+const express = require("express");
+const Stripe = require("stripe");
+
+const app = express();
+
+// ⚠️ IMPORTANT: use raw body
+app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {
+  const stripe = new Stripe(process.env.STRIPE_KEY);
+
+  const sig = req.headers["stripe-signature"];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.log("Webhook error:", err.message);
+    return res.sendStatus(400);
+  }
+
+  // 🎯 HANDLE EVENT
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+
+    const userEmail = session.customer_details.email;
+
+    console.log("User paid:", userEmail);
+
+    // 👉 update user plan (Pro/VIP)
+    upgradeUser(userEmail);
+  }
+
+  res.sendStatus(200);
+});
+const { getFirestore, collection, addDoc } = require("firebase/firestore");
+
+async function upgradeUser(email) {
+  const db = getFirestore();
+
+  await addDoc(collection(db, "users"), {
+    email: email,
+    plan: "pro",
+    updatedAt: Date.now()
+  });
+}
+async function getUser(email) {
+  const res = await fetch("https://your-server.com/user?email=" + email);
+  const data = await res.json();
+
+  user.plan = data.plan;
+}
+function canUse() {
+  if (user.plan === "free") {
+    alert("Upgrade to Pro 🚀");
+    return false;
+  }
+  return true;
+}
