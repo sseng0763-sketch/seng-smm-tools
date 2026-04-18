@@ -29,3 +29,19 @@ async function send(){
 
 </body>
 </html>
+<button onclick="pay()">Pay Now</button>
+
+<script>
+async function pay(){
+  await fetch("https://your-app.onrender.com/payment-auto", {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: localStorage.getItem("user"),
+      amount: 10
+    })
+  });
+
+  alert("Payment Success (Auto)");
+}
+</script>
