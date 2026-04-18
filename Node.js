@@ -6,3 +6,4 @@ STRIPE_PRICE_VIP=price_xxx
 npm install jsonwebtoken
 node server.js
 https://your-app.onrender.com
+npm install axios
