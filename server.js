@@ -368,3 +368,55 @@ app.get("/admin/users", isAdmin, async (req,res)=>{
   const users = await User.find();
   res.json(users);
 });
+const jwt = require("jsonwebtoken");
+
+const SECRET = "MY_SECRET_KEY";
+
+app.post("/login", async (req,res)=>{
+  const user = await User.findOne({ email: req.body.email });
+
+  if(!user){
+    return res.json({message:"User not found"});
+  }
+
+  if(user.password !== req.body.password){
+    return res.json({message:"Wrong password"});
+  }
+
+  // create token
+  const token = jwt.sign(
+    { email: user.email, role: user.role },
+    SECRET,
+    { expiresIn: "1h" }
+  );
+
+  res.json({
+    message:"Login success",
+    token
+  });
+});
+function auth(req,res,next){
+  const token = req.headers.authorization;
+
+  if(!token){
+    return res.json({message:"No token"});
+  }
+
+  try{
+    const decoded = jwt.verify(token, SECRET);
+    req.user = decoded;
+    next();
+  } catch(err){
+    res.json({message:"Invalid token"});
+  }
+}
+function isAdmin(req,res,next){
+  if(req.user.role !== "admin"){
+    return res.json({message:"Admin only"});
+  }
+  next();
+}
+app.get("/admin/users", auth, isAdmin, async (req,res)=>{
+  const users = await User.find();
+  res.json(users);
+});
