@@ -295,4 +295,36 @@ async function buy(plan) {
   const data = await res.json();
   window.location.href = data.url;
 }
+  app.post("/ai", async (req, res) => {
+  const { keyword } = req.body;
+
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.OPENAI_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "user", content: `Write Khmer marketing caption for ${keyword}` }
+      ]
+    })
+  });
+
+  const data = await response.json();
+  res.json({ text: data.choices[0].message.content });
+});
+app.post("/webhook", express.raw({type: 'application/json'}), (req, res) => {
+  // verify event
+  // update user plan in Firebase
+  res.sendStatus(200);
+});
+  function canUse(user) {
+  if (user.plan === "free") {
+    alert("Upgrade to Pro");
+    return false;
+  }
+  return true;
+}
   
