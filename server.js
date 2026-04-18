@@ -325,3 +325,46 @@ app.post("/admin/add-balance", async (req,res)=>{
 
   res.json({message:"Balance updated"});
 });
+const User = mongoose.model("User", {
+  email: String,
+  password: String,
+  balance: Number,
+  role: { type: String, default: "user" } // user or admin
+});
+app.post("/create-admin", async (req,res)=>{
+  const user = new User({
+    email: "admin@gmail.com",
+    password: "123456",
+    role: "admin",
+    balance: 0
+  });
+
+  await user.save();
+  res.json("Admin created");
+});
+app.post("/login", async (req,res)=>{
+  const user = await User.findOne({ email: req.body.email });
+
+  if(!user){
+    return res.json({message:"User not found"});
+  }
+
+  if(user.password !== req.body.password){
+    return res.json({message:"Wrong password"});
+  }
+
+  res.json({
+    message:"Login success",
+    role: user.role
+  });
+});
+function isAdmin(req,res,next){
+  if(req.headers.role !== "admin"){
+    return res.json({message:"Access denied"});
+  }
+  next();
+}
+app.get("/admin/users", isAdmin, async (req,res)=>{
+  const users = await User.find();
+  res.json(users);
+});
