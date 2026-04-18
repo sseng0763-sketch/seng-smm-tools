@@ -1,45 +1,24 @@
-let user = {
-  email: "test@gmail.com",
-  plan: "free",
-  used: 0
-};
-
-// 🔒 Limit
-function canUse() {
-  if (user.plan === "free" && user.used >= 5) {
-    alert("Upgrade to Pro 🚀");
-    return false;
-  }
-  return true;
-}
-
-// 🤖 AI
-async function generate() {
-  if (!canUse()) return;
-
+function generate() {
   let keyword = document.getElementById("keyword").value;
 
-  const res = await fetch("https://seng_smm.com/ai", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ keyword })
-  });
+  let captions = [
+    "🔥 ទំនិញថ្មី! " + keyword + " មានលក់ហើយ!",
+    "💥 កុំភ្លេច! " + keyword + " កំពុងពេញនិយម!",
+    "😍 អ្នកណាខ្លះចូលចិត្ត " + keyword + " ?",
+    "🚀 Best Seller: " + keyword
+  ];
 
-  const data = await res.json();
+  let hashtags = [
+    "#KhmerShop",
+    "#OnlineSale",
+    "#Cambodia",
+    "#SMM",
+    "#Trending"
+  ];
 
-  document.getElementById("output").innerText = data.text;
+  let randomCaption = captions[Math.floor(Math.random() * captions.length)];
 
-  user.used++;
-}
-
-// 💳 Payment
-async function buy(plan) {
-  const res = await fetch("https://seng_smm.com/create-checkout-session", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ plan })
-  });
-
-  const data = await res.json();
-  window.location.href = data.url;
+  document.getElementById("output").innerHTML =
+    "<h3>Caption:</h3>" + randomCaption +
+    "<h3>Hashtags:</h3>" + hashtags.join(" ");
 }
