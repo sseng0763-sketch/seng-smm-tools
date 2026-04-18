@@ -302,3 +302,4 @@ app.get("/balance/:email", async (req,res)=>{
   const user = await User.findOne({ email: req.params.email });
   res.json({balance: user.balance});
 });
+alert("Order ID: " + data.orderId + " | Balance: $" + data.balance);
