@@ -253,3 +253,46 @@ export function checkLimit(plan, used) {
   return true;
 }
   
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const Stripe = require("stripe");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// create checkout session
+app.post("/create-checkout-session", async (req, res) => {
+  const { plan } = req.body;
+
+  const prices = {
+    pro: process.env.STRIPE_PRICE_PRO,
+    vip: process.env.STRIPE_PRICE_VIP
+  };
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "subscription",
+    line_items: [{ price: prices[plan], quantity: 1 }],
+    success_url: "https://your-site.github.io/success.html",
+    cancel_url: "https://your-site.github.io/"
+  });
+
+  res.json({ url: session.url });
+});
+
+app.listen(3000, () => console.log("Server running on 3000"));
+async function buy(plan) {
+  const res = await fetch("https://your-server.com/create-checkout-session", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ plan })
+  });
+
+  const data = await res.json();
+  window.location.href = data.url;
+}
+  
