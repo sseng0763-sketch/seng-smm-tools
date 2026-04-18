@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+</head>
+<body>
+  <h1>My Posts</h1>
+  <div id="list"></div>
+
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { collection, getDocs } 
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    async function load() {
+      let snap = await getDocs(collection(db, "posts"));
+      snap.forEach(doc => {
+        document.getElementById("list").innerHTML += 
+          "<p>" + doc.data().text + "</p>";
+      });
+    }
+
+    load();
+  </script>
+</body>
+</html>
