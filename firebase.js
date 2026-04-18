@@ -132,5 +132,20 @@ export function checkLimit(userPlan, count) {
     alert("Upgrade to Pro!");
     return false;
   }
-  return true;
+  return 
+export const PLANS = {
+  free: { limit: 5 },
+  pro: { price: 5, limit: 100 },
+  vip: { price: 10, limit: -1 }
+};
+  export async function checkout(plan) {
+  const res = await fetch("/create-checkout-session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ plan })
+  });
+
+  const data = await res.json();
+  window.location.href = data.url;
 }
+  
