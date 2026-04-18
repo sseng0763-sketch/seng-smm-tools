@@ -83,3 +83,59 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
+npm init -y
+npm install express mongoose cors bcrypt
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// connect MongoDB
+mongoose.connect("mongodb://127.0.0.1:27017/smm_panel");
+
+// user schema
+const User = mongoose.model("User", {
+  email: String,
+  password: String
+});
+
+
+// REGISTER
+app.post("/register", async (req,res)=>{
+  const hashed = await bcrypt.hash(req.body.password, 10);
+
+  const user = new User({
+    email: req.body.email,
+    password: hashed
+  });
+
+  await user.save();
+  res.json({message:"Registered"});
+});
+
+
+// LOGIN
+app.post("/login", async (req,res)=>{
+  const user = await User.findOne({ email: req.body.email });
+
+  if(!user){
+    return res.json({message:"User not found"});
+  }
+
+  const match = await bcrypt.compare(req.body.password, user.password);
+
+  if(!match){
+    return res.json({message:"Wrong password"});
+  }
+
+  res.json({message:"Login success"});
+});
+
+
+app.listen(5000, ()=>{
+  console.log("Server running...");
+});
