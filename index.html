@@ -2,29 +2,23 @@
 <html lang="km">
 <head>
   <meta charset="UTF-8">
-  <title>Khmer SMM Tools</title>
-  <link rel="stylesheet" href="style.css">
+  <title>SMM Pro</title>
 </head>
 <body>
 
-  <div class="box">
-    <h1>🇰🇭 Khmer SMM Tools</h1>
+<h2>SENG SMM Tools 💰</h2>
 
-    <input type="text" id="keyword" placeholder="បញ្ចូល keyword...">
+<input id="keyword" placeholder="បញ្ចូល keyword">
+<button onclick="generate()">Generate</button>
 
-    <button onclick="generate()">Generate</button>
+<p id="output"></p>
 
-    <div id="output"></div>
+<hr>
 
-    <button onclick="copyText()">Copy</button>
-  </div>
+<h3>Upgrade Plan</h3>
+<button onclick="buy('pro')">Buy Pro ($5)</button>
+<button onclick="buy('vip')">Buy VIP ($10)</button>
 
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
-<input id="keyword" placeholder="Enter keyword">
-<button onclick="generate()">Generate AI Caption</button>
-
-<div id="output"></div>
-<button onclick="buy('pro')">Buy Pro</button>
-<button onclick="buy('vip')">Buy VIP</button>
