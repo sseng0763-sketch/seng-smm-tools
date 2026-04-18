@@ -79,3 +79,58 @@ function login() {
       console.log(user.user.displayName);
     });
 }
+import { db, addDoc, collection } from "./firebase.js";
+
+export async function setUserPlan(userId, plan) {
+  await addDoc(collection(db, "users"), {
+    userId: userId,
+    plan: plan, // free | pro | vip
+    expire: Date.now() + 30 * 24 * 60 * 60 * 1000
+  });
+}
+import { db } from "./firebase.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+async function loadStats() {
+  let snap = await getDocs(collection(db, "posts"));
+
+  let total = 0;
+
+  snap.forEach(doc => total++);
+
+  document.getElementById("stats").innerHTML = `
+    <h3>Total Posts: ${total}</h3>
+  `;
+}
+
+loadStats();
+export async function autoPostFacebook(text, token) {
+  await fetch(`https://graph.facebook.com/me/feed`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: text,
+      access_token: token
+    })
+  });
+}
+export async function sendTelegram(text) {
+  let token = "BOT_TOKEN";
+  let chat_id = "CHAT_ID";
+
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id,
+      text
+    })
+  });
+}
+export function checkLimit(userPlan, count) {
+  if (userPlan === "free" && count > 5) {
+    alert("Upgrade to Pro!");
+    return false;
+  }
+  return true;
+}
