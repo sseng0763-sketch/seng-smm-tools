@@ -1,99 +1,3 @@
-<h2>SMM Panel Dashboard</h2>
-
-<input id="service" placeholder="Service">
-<input id="link" placeholder="Link">
-<input id="quantity" placeholder="Quantity">
-
-<button onclick="order()">Place Order</button>
-
-<script>
-async function order() {
-  await fetch("http://localhost:5000/api/order", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      service: service.value,
-      link: link.value,
-      quantity: quantity.value
-    })
-  });
-
-  alert("Order placed!");
-}
-</script>
-<script>
-async function order(){
-  const res = await fetch("http://localhost:5000/order", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      service: service.value,
-      link: link.value,
-      quantity: qty.value
-    })
-  });
-
-  const data = await res.json();
-
-  if(data.order){
-    alert("Order ID: " + data.order);
-  } else {
-    alert("Order failed");
-  }
-}
-</script>
-<script>
-async function order(){
-  const res = await fetch("http://localhost:5000/order", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      email: localStorage.getItem("user"),
-      service: service.value,
-      link: link.value,
-      quantity: qty.value
-    })
-  });
-
-  const data = await res.json();
-  alert("Order ID: " + data.orderId);
-}
-</script>
-<h3>Your Orders</h3>
-<ul id="orders"></ul>
-
-<script>
-async function loadOrders(){
-  const email = localStorage.getItem("user");
-
-  const res = await fetch("http://localhost:5000/orders/" + email);
-  const data = await res.json();
-
-  let list = "";
-  data.forEach(o=>{
-    list += `<li>${o.service} | ${o.quantity} | ${o.status}</li>`;
-  });
-
-  document.getElementById("orders").innerHTML = list;
-}
-
-loadOrders();
-</script>
-<h3 id="balance"></h3>
-
-<script>
-async function loadBalance(){
-  const email = localStorage.getItem("user");
-
-  const res = await fetch("http://localhost:5000/balance/" + email);
-  const data = await res.json();
-
-  document.getElementById("balance").innerText =
-    "Balance: $" + data.balance;
-}
-
-loadBalance();
-</script>
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,193 +7,96 @@ loadBalance();
 
 <body>
 
-<div class="navbar">SEN SMM PANEL</div>
+<h2>Dashboard</h2>
 
-<div class="container">
+<p id="user"></p>
 
-  <div class="card">
-    <h3 id="user"></h3>
-    <h4 id="balance"></h4>
-  </div>
+<input id="service" placeholder="Service ID">
+<br>
+<input id="link" placeholder="Link">
+<br>
+<input id="qty" placeholder="Quantity">
+<br><br>
 
-  <div class="card">
-    <h3>Place Order</h3>
+<button onclick="order()">Place Order</button>
 
-    <input id="service" placeholder="Service ID">
-    <input id="link" placeholder="Link">
-    <input id="qty" placeholder="Quantity">
+<button onclick="logout()">Logout</button>
 
-    <button onclick="order()">Submit Order</button>
-  </div>
+<hr>
 
-  <div class="card">
-    <h3>Order History</h3>
-    <ul id="orders"></ul>
-  </div>
-
-</div>
+<h3>Orders</h3>
+<ul id="orders"></ul>
 
 <script>
+
 // show user
 document.getElementById("user").innerText =
 "User: " + localStorage.getItem("user");
 
-// load balance
-async function loadBalance(){
-  const res = await fetch("https://your-app.onrender.com/balance/" + localStorage.getItem("user"));
-  const data = await res.json();
-  document.getElementById("balance").innerText = "Balance: $" + data.balance;
-}
 
-// load orders
-async function loadOrders(){
-  const res = await fetch("https://your-app.onrender.com/orders/" + localStorage.getItem("user"));
-  const data = await res.json();
-
-  let list = "";
-  data.forEach(o=>{
-    list += `<li>${o.service} | ${o.quantity} | ${o.status}</li>`;
-  });
-
-  document.getElementById("orders").innerHTML = list;
-}
-
-// order
+// ORDER FUNCTION
 async function order(){
-  const res = await fetch("https://your-app.onrender.com/order", {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "Authorization": localStorage.getItem("token")
-    },
-    body: JSON.stringify({
-      email: localStorage.getItem("user"),
-      service: service.value,
-      link: link.value,
-      quantity: qty.value
-    })
-  });
 
-  const data = await res.json();
-  alert(data.message);
+  if(!service.value || !link.value || !qty.value){
+    alert("Fill all fields");
+    return;
+  }
 
-  loadBalance();
-  loadOrders();
+  try {
+    const res = await fetch("http://localhost:5000/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: localStorage.getItem("user"),
+        service: service.value,
+        link: link.value,
+        quantity: qty.value
+      })
+    });
+
+    const data = await res.json();
+    alert(data.message || "Order sent");
+
+    loadOrders();
+
+  } catch (err) {
+    alert("Server not running or wrong API");
+    console.log(err);
+  }
 }
 
-loadBalance();
-loadOrders();
-</script>
 
-</body>
-</html>
-<script>
+// LOAD ORDERS
 async function loadOrders(){
-  const res = await fetch("https://your-app.onrender.com/orders/" + localStorage.getItem("user"));
-  const data = await res.json();
+  try {
+    const res = await fetch("http://localhost:5000/orders/" + localStorage.getItem("user"));
+    const data = await res.json();
 
-  let list = "";
+    let list = "";
 
-  data.forEach(o=>{
-    list += `
-      <li>
-        ${o.service} | ${o.quantity} | 
-        <b>${o.status}</b>
-      </li>
-    `;
-  });
+    data.forEach(o=>{
+      list += `<li>${o.service} | ${o.quantity} | ${o.status}</li>`;
+    });
 
-  document.getElementById("orders").innerHTML = list;
+    document.getElementById("orders").innerHTML = list;
+
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-setInterval(loadOrders, 5000);
+
+// LOGOUT
+function logout(){
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+
+// initial load
 loadOrders();
-</script>
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-</head>
 
-<body>
-
-<div class="sidebar">
-  <h2>SMM PANEL</h2>
-  <a href="#">Dashboard</a>
-  <a href="payment.html">Deposit</a>
-  <a href="#">Orders</a>
-  <a href="login.html">Logout</a>
-</div>
-
-<div class="main">
-
-  <h1>Dashboard</h1>
-
-  <div class="card">
-    <h3>Balance</h3>
-    <p id="balance">$0</p>
-  </div>
-
-  <div class="card">
-    <h3>New Order</h3>
-
-    <input id="service" placeholder="Service ID">
-    <input id="link" placeholder="Link">
-    <input id="qty" placeholder="Quantity">
-
-    <button onclick="order()">Place Order</button>
-  </div>
-
-  <div class="card" style="width: 90%;">
-    <h3>Orders</h3>
-    <ul id="orders"></ul>
-  </div>
-
-</div>
-
-<script>
-// load balance
-async function loadBalance(){
-  const res = await fetch("https://your-app.onrender.com/balance/" + localStorage.getItem("user"));
-  const data = await res.json();
-  document.getElementById("balance").innerText = "$" + data.balance;
-}
-
-// order
-async function order(){
-  const res = await fetch("https://your-app.onrender.com/order", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      email: localStorage.getItem("user"),
-      service: service.value,
-      link: link.value,
-      quantity: qty.value
-    })
-  });
-
-  const data = await res.json();
-  alert(data.message);
-  loadOrders();
-  loadBalance();
-}
-
-// load orders
-async function loadOrders(){
-  const res = await fetch("https://your-app.onrender.com/orders/" + localStorage.getItem("user"));
-  const data = await res.json();
-
-  let list = "";
-  data.forEach(o=>{
-    list += `<li>${o.service} | ${o.quantity} | ${o.status}</li>`;
-  });
-
-  document.getElementById("orders").innerHTML = list;
-}
-
-loadBalance();
-loadOrders();
 </script>
 
 </body>
