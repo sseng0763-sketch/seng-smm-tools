@@ -19,7 +19,7 @@ async function generate() {
 
   let keyword = document.getElementById("keyword").value;
 
-  const res = await fetch("https://your-backend.com/ai", {
+  const res = await fetch("https://seng_smm.com/ai", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ keyword })
@@ -34,7 +34,7 @@ async function generate() {
 
 // 💳 Payment
 async function buy(plan) {
-  const res = await fetch("https://your-backend.com/create-checkout-session", {
+  const res = await fetch("https://seng_smm.com/create-checkout-session", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ plan })
