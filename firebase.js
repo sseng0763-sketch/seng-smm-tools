@@ -153,3 +153,12 @@ export const PLANS = {
 
   // upgrade later → connect OpenAI / Gemini API
 }
+export async function contentFactory(keywords) {
+  let posts = [];
+
+  for (let k of keywords) {
+    posts.push(await aiEngine(k));
+  }
+
+  return posts;
+}
