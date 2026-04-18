@@ -21,3 +21,24 @@ async function order() {
   alert("Order placed!");
 }
 </script>
+<script>
+async function order(){
+  const res = await fetch("http://localhost:5000/order", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      service: service.value,
+      link: link.value,
+      quantity: qty.value
+    })
+  });
+
+  const data = await res.json();
+
+  if(data.order){
+    alert("Order ID: " + data.order);
+  } else {
+    alert("Order failed");
+  }
+}
+</script>
