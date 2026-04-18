@@ -51,3 +51,72 @@ button {
 button:hover {
   background: #3742fa;
 }
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4f6f9;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #1e272e;
+  color: white;
+  position: fixed;
+  padding-top: 20px;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 12px;
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  background: #485460;
+}
+
+/* Main */
+.main {
+  margin-left: 220px;
+  padding: 20px;
+}
+
+/* Cards */
+.card {
+  background: white;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  display: inline-block;
+  width: 250px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 10px;
+  background: #0984e3;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0652dd;
+}
