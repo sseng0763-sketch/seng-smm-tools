@@ -162,3 +162,10 @@ export async function contentFactory(keywords) {
 
   return posts;
 }
+export async function autoPostAll(platforms, text) {
+  for (let p of platforms) {
+    if (p === "telegram") sendTelegram(text);
+    if (p === "facebook") sendFacebook(text);
+    if (p === "web") console.log(text);
+  }
+}
