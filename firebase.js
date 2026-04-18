@@ -56,3 +56,18 @@ export async function sendTelegram(text) {
     })
   });
 }
+import { generateAI } from "./ai.js";
+import { savePost } from "./firebase.js";
+import { sendTelegram } from "./app.js";
+
+async function generate() {
+  let keyword = document.getElementById("keyword").value;
+
+  let caption = await generateAI(keyword);
+
+  document.getElementById("output").innerText = caption;
+
+  await savePost(caption);
+
+  await sendTelegram(caption);
+}
