@@ -34,3 +34,12 @@ async function savePost(text) {
     time: Date.now()
   });
 }
+import { db } from "./firebase.js";
+import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+export async function savePost(text) {
+  await addDoc(collection(db, "posts"), {
+    text,
+    time: Date.now()
+  });
+}
