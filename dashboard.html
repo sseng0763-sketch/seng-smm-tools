@@ -42,3 +42,20 @@ async function order(){
   }
 }
 </script>
+<script>
+async function order(){
+  const res = await fetch("http://localhost:5000/order", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: localStorage.getItem("user"),
+      service: service.value,
+      link: link.value,
+      quantity: qty.value
+    })
+  });
+
+  const data = await res.json();
+  alert("Order ID: " + data.orderId);
+}
+</script>
