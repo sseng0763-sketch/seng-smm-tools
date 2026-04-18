@@ -239,3 +239,17 @@ export async function sendTelegram(text) {
     })
   });
 }
+export const plans = {
+  free: { limit: 5 },
+  pro: { limit: 100 },
+  vip: { limit: -1 }
+};
+
+export function checkLimit(plan, used) {
+  if (plan !== "vip" && used >= plans[plan].limit) {
+    alert("Please upgrade plan!");
+    return false;
+  }
+  return true;
+}
+  
