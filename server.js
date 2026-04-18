@@ -227,3 +227,78 @@ app.get("/orders/:email", async (req,res)=>{
   const orders = await Order.find({ email: req.params.email });
   res.json(orders);
 });
+const User = mongoose.model("User", {
+  email: String,
+  password: String,
+  balance: { type: Number, default: 0 }
+});
+app.post("/add-balance", async (req,res)=>{
+  const {email, amount} = req.body;
+
+  const user = await User.findOne({ email });
+
+  if(!user){
+    return res.json({message:"User not found"});
+  }
+
+  user.balance += amount;
+  await user.save();
+
+  res.json({message:"Balance added", balance:user.balance});
+});
+app.post("/order", async (req,res)=>{
+  const {email, service, link, quantity} = req.body;
+
+  const user = await User.findOne({ email });
+
+  if(!user){
+    return res.json({message:"User not found"});
+  }
+
+  const price = quantity * 0.01; // example price
+
+  // CHECK BALANCE
+  if(user.balance < price){
+    return res.json({message:"Not enough balance"});
+  }
+
+  try{
+    const apiRes = await axios.post(API_URL, {
+      key: API_KEY,
+      action: "add",
+      service,
+      link,
+      quantity
+    });
+
+    const orderId = apiRes.data.order;
+
+    // deduct balance
+    user.balance -= price;
+    await user.save();
+
+    // save order
+    const newOrder = new Order({
+      email,
+      service,
+      link,
+      quantity,
+      orderId
+    });
+
+    await newOrder.save();
+
+    res.json({
+      message:"Order success",
+      orderId,
+      balance:user.balance
+    });
+
+  } catch(err){
+    res.json({message:"Order failed"});
+  }
+});
+app.get("/balance/:email", async (req,res)=>{
+  const user = await User.findOne({ email: req.params.email });
+  res.json({balance: user.balance});
+});
