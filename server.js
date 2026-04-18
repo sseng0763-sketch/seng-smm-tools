@@ -425,3 +425,6 @@ fetch("http://localhost:5000/admin/users", {
     "Authorization": localStorage.getItem("token")
   }
 });
+mongodb+srv://user:pass@cluster.mongodb.net/smm_panel
+mongoose.connect("YOUR_MONGODB_URL");
+fetch("https://your-app.onrender.com/login", ...)
