@@ -94,3 +94,92 @@ async function loadBalance(){
 
 loadBalance();
 </script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="navbar">SEN SMM PANEL</div>
+
+<div class="container">
+
+  <div class="card">
+    <h3 id="user"></h3>
+    <h4 id="balance"></h4>
+  </div>
+
+  <div class="card">
+    <h3>Place Order</h3>
+
+    <input id="service" placeholder="Service ID">
+    <input id="link" placeholder="Link">
+    <input id="qty" placeholder="Quantity">
+
+    <button onclick="order()">Submit Order</button>
+  </div>
+
+  <div class="card">
+    <h3>Order History</h3>
+    <ul id="orders"></ul>
+  </div>
+
+</div>
+
+<script>
+// show user
+document.getElementById("user").innerText =
+"User: " + localStorage.getItem("user");
+
+// load balance
+async function loadBalance(){
+  const res = await fetch("https://your-app.onrender.com/balance/" + localStorage.getItem("user"));
+  const data = await res.json();
+  document.getElementById("balance").innerText = "Balance: $" + data.balance;
+}
+
+// load orders
+async function loadOrders(){
+  const res = await fetch("https://your-app.onrender.com/orders/" + localStorage.getItem("user"));
+  const data = await res.json();
+
+  let list = "";
+  data.forEach(o=>{
+    list += `<li>${o.service} | ${o.quantity} | ${o.status}</li>`;
+  });
+
+  document.getElementById("orders").innerHTML = list;
+}
+
+// order
+async function order(){
+  const res = await fetch("https://your-app.onrender.com/order", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization": localStorage.getItem("token")
+    },
+    body: JSON.stringify({
+      email: localStorage.getItem("user"),
+      service: service.value,
+      link: link.value,
+      quantity: qty.value
+    })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+
+  loadBalance();
+  loadOrders();
+}
+
+loadBalance();
+loadOrders();
+</script>
+
+</body>
+</html>
