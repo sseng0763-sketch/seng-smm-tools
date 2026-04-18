@@ -177,3 +177,14 @@ node server.js
 {
   "order": 123456
 }
+const mongoose = require("mongoose");
+
+const Order = mongoose.model("Order", {
+  email: String,
+  service: String,
+  link: String,
+  quantity: Number,
+  orderId: String,
+  status: { type: String, default: "pending" },
+  date: { type: Date, default: Date.now }
+});
