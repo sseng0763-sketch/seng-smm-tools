@@ -15,3 +15,22 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 export { auth, db, GoogleAuthProvider, signInWithPopup, addDoc, collection };
+import { db, addDoc, collection } from "./firebase.js";
+
+function generateAI(keyword) {
+  let captions = [
+    `🔥 Hot Deal: ${keyword} limited time!`,
+    `💥 Must have ${keyword} now available!`,
+    `😍 Everyone loves ${keyword}!`,
+    `🚀 Best choice for ${keyword}`
+  ];
+
+  return captions[Math.floor(Math.random() * captions.length)];
+}
+
+async function savePost(text) {
+  await addDoc(collection(db, "posts"), {
+    text: text,
+    time: Date.now()
+  });
+}
