@@ -148,4 +148,8 @@ export const PLANS = {
   const data = await res.json();
   window.location.href = data.url;
 }
-  
+  export async function aiEngine(keyword, tone = "marketing") {
+  return `🔥 ${keyword} - Best deal today! Limited offer!`;
+
+  // upgrade later → connect OpenAI / Gemini API
+}
