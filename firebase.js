@@ -43,3 +43,16 @@ export async function savePost(text) {
     time: Date.now()
   });
 }
+export async function sendTelegram(text) {
+  let token = "YOUR_BOT_TOKEN";
+  let chat_id = "YOUR_CHAT_ID";
+
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chat_id,
+      text: text
+    })
+  });
+}
