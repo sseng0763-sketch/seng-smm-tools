@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+</head>
+
+<body>
+
+<h1>Admin Panel</h1>
+
+<h2>Users</h2>
+<ul id="users"></ul>
+
+<h2>Orders</h2>
+<ul id="orders"></ul>
+
+<h2>Add Balance</h2>
+<input id="email" placeholder="User Email">
+<input id="amount" placeholder="Amount">
+<button onclick="addBalance()">Add</button>
+
+<script>
+// Load users
+async function loadUsers(){
+  const res = await fetch("http://localhost:5000/admin/users");
+  const data = await res.json();
+
+  let list = "";
+  data.forEach(u=>{
+    list += `<li>${u.email} | Balance: $${u.balance}</li>`;
+  });
+
+  document.getElementById("users").innerHTML = list;
+}
+
+// Load orders
+async function loadOrders(){
+  const res = await fetch("http://localhost:5000/admin/orders");
+  const data = await res.json();
+
+  let list = "";
+  data.forEach(o=>{
+    list += `<li>${o.email} | ${o.service} | ${o.status}</li>`;
+  });
+
+  document.getElementById("orders").innerHTML = list;
+}
+
+// Add balance
+async function addBalance(){
+  await fetch("http://localhost:5000/admin/add-balance", {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      amount: Number(amount.value)
+    })
+  });
+
+  alert("Balance added");
+  loadUsers();
+}
+
+loadUsers();
+loadOrders();
+</script>
+
+</body>
+</html>
