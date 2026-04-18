@@ -466,3 +466,35 @@ app.post("/admin/approve", async (req,res)=>{
 
   res.json({message:"Payment approved"});
 });
+const axios = require("axios");
+
+const BOT_TOKEN = "YOUR_BOT_TOKEN";
+const CHAT_ID = "YOUR_CHAT_ID";
+
+function sendTelegram(message){
+  axios.get(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    params: {
+      chat_id: CHAT_ID,
+      text: message
+    }
+  });
+}
+app.post("/payment-auto", async (req,res)=>{
+  const {email, amount} = req.body;
+
+  const user = await User.findOne({ email });
+
+  if(!user){
+    return res.json({message:"User not found"});
+  }
+
+  user.balance += amount;
+  await user.save();
+
+  // notify admin
+  sendTelegram(`💰 New Deposit:
+User: ${email}
+Amount: $${amount}`);
+
+  res.json({message:"Payment auto approved"});
+});
