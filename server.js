@@ -303,3 +303,25 @@ app.get("/balance/:email", async (req,res)=>{
   res.json({balance: user.balance});
 });
 alert("Order ID: " + data.orderId + " | Balance: $" + data.balance);
+app.get("/admin/users", async (req,res)=>{
+  const users = await User.find();
+  res.json(users);
+});
+app.get("/admin/orders", async (req,res)=>{
+  const orders = await Order.find();
+  res.json(orders);
+});
+app.post("/admin/add-balance", async (req,res)=>{
+  const {email, amount} = req.body;
+
+  const user = await User.findOne({ email });
+
+  if(!user){
+    return res.json({message:"User not found"});
+  }
+
+  user.balance += amount;
+  await user.save();
+
+  res.json({message:"Balance updated"});
+});
