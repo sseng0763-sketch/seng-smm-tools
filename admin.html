@@ -73,3 +73,35 @@ if(localStorage.getItem("role") !== "admin"){
   window.location.href = "login.html";
 }
 </script>
+<h2>Payments</h2>
+<ul id="payments"></ul>
+
+<script>
+async function loadPayments(){
+  const res = await fetch("https://your-app.onrender.com/admin/payments");
+  const data = await res.json();
+
+  let list = "";
+  data.forEach(p=>{
+    list += `<li>
+      ${p.email} | $${p.amount} | ${p.status}
+      <button onclick="approve('${p._id}')">Approve</button>
+    </li>`;
+  });
+
+  document.getElementById("payments").innerHTML = list;
+}
+
+async function approve(id){
+  await fetch("https://your-app.onrender.com/admin/approve", {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({id})
+  });
+
+  alert("Approved");
+  loadPayments();
+}
+
+loadPayments();
+</script>
