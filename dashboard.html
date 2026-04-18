@@ -183,3 +183,25 @@ loadOrders();
 
 </body>
 </html>
+<script>
+async function loadOrders(){
+  const res = await fetch("https://your-app.onrender.com/orders/" + localStorage.getItem("user"));
+  const data = await res.json();
+
+  let list = "";
+
+  data.forEach(o=>{
+    list += `
+      <li>
+        ${o.service} | ${o.quantity} | 
+        <b>${o.status}</b>
+      </li>
+    `;
+  });
+
+  document.getElementById("orders").innerHTML = list;
+}
+
+setInterval(loadOrders, 5000);
+loadOrders();
+</script>
