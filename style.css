@@ -1,122 +1,73 @@
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   margin: 0;
-  background: #f1f2f6;
-}
-
-/* Navbar */
-.navbar {
-  background: #2f3542;
-  color: white;
-  padding: 15px;
+  background: #f4f6f9;
   text-align: center;
-  font-size: 20px;
 }
 
-/* Container */
+/* Titles */
+h1, h2, h3 {
+  color: #2f3542;
+}
+
+/* Container style */
 .container {
   padding: 20px;
 }
 
-/* Card */
-.card {
-  background: white;
-  padding: 20px;
-  margin: 10px auto;
-  width: 300px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* Input fields */
+input {
+  width: 250px;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
 }
 
-/* Inputs */
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+input:focus {
+  border-color: #1e90ff;
 }
 
 /* Buttons */
 button {
-  width: 100%;
-  padding: 10px;
+  padding: 10px 20px;
+  margin: 5px;
   background: #1e90ff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 button:hover {
   background: #3742fa;
 }
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #f4f6f9;
-}
 
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  height: 100vh;
-  background: #1e272e;
-  color: white;
-  position: fixed;
-  padding-top: 20px;
-}
-
-.sidebar h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.sidebar a {
-  display: block;
-  color: white;
-  padding: 12px;
+/* Links */
+a {
   text-decoration: none;
+  color: #1e90ff;
 }
 
-.sidebar a:hover {
-  background: #485460;
+/* Dashboard user text */
+#user {
+  font-weight: bold;
+  margin: 10px 0;
 }
 
-/* Main */
-.main {
-  margin-left: 220px;
-  padding: 20px;
+/* Orders list */
+ul {
+  list-style: none;
+  padding: 0;
 }
 
-/* Cards */
-.card {
+li {
   background: white;
-  padding: 20px;
-  margin: 10px;
-  border-radius: 10px;
-  display: inline-block;
-  width: 250px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-/* Inputs */
-input {
-  width: 100%;
+  margin: 5px auto;
   padding: 10px;
-  margin: 5px 0;
-}
-
-/* Buttons */
-button {
-  width: 100%;
-  padding: 10px;
-  background: #0984e3;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0652dd;
+  width: 300px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
