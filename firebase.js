@@ -214,3 +214,15 @@ export async function savePost(db, text, userId) {
     createdAt: Date.now()
   });
 }
+import { getDocs, collection } from "firebase/firestore";
+
+export async function loadDashboard(db) {
+  const snap = await getDocs(collection(db, "posts"));
+
+  let total = 0;
+
+  snap.forEach(() => total++);
+
+  document.getElementById("stats").innerHTML =
+    `🔥 Total Posts: ${total}`;
+}
