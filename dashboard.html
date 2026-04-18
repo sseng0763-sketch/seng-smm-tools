@@ -59,3 +59,23 @@ async function order(){
   alert("Order ID: " + data.orderId);
 }
 </script>
+<h3>Your Orders</h3>
+<ul id="orders"></ul>
+
+<script>
+async function loadOrders(){
+  const email = localStorage.getItem("user");
+
+  const res = await fetch("http://localhost:5000/orders/" + email);
+  const data = await res.json();
+
+  let list = "";
+  data.forEach(o=>{
+    list += `<li>${o.service} | ${o.quantity} | ${o.status}</li>`;
+  });
+
+  document.getElementById("orders").innerHTML = list;
+}
+
+loadOrders();
+</script>
