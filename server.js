@@ -420,3 +420,8 @@ app.get("/admin/users", auth, isAdmin, async (req,res)=>{
   const users = await User.find();
   res.json(users);
 });
+fetch("http://localhost:5000/admin/users", {
+  headers:{
+    "Authorization": localStorage.getItem("token")
+  }
+});
