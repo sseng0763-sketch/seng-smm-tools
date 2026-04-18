@@ -1,12 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+
 <h2>Login</h2>
+
 <input id="email" placeholder="Email">
+<br>
 <input id="password" type="password" placeholder="Password">
+<br><br>
+
 <button onclick="login()">Login</button>
 
 <script>
-async function login() {
-  const res = await fetch("http://localhost:5000/api/auth/login", {
-    method: "POST",
+async function login(){
+  const res = await fetch("http://localhost:5000/login", {
+    method:"POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
       email: email.value,
@@ -15,7 +23,15 @@ async function login() {
   });
 
   const data = await res.json();
-  localStorage.setItem("token", data.token);
-  alert("Logged in!");
+
+  if(data.message === "Login success"){
+    localStorage.setItem("user", email.value);
+    window.location.href = "dashboard.html";
+  } else {
+    alert(data.message);
+  }
 }
 </script>
+
+</body>
+</html>
