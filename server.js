@@ -428,3 +428,41 @@ fetch("http://localhost:5000/admin/users", {
 mongodb+srv://user:pass@cluster.mongodb.net/smm_panel
 mongoose.connect("YOUR_MONGODB_URL");
 fetch("https://your-app.onrender.com/login", ...)
+const Payment = mongoose.model("Payment", {
+  email: String,
+  amount: Number,
+  image: String,
+  status: { type: String, default: "pending" },
+  date: { type: Date, default: Date.now }
+});
+app.post("/payment", async (req,res)=>{
+  const {email, amount, image} = req.body;
+
+  const payment = new Payment({
+    email,
+    amount,
+    image
+  });
+
+  await payment.save();
+
+  res.json({message:"Payment submitted"});
+});
+app.get("/admin/payments", async (req,res)=>{
+  const payments = await Payment.find();
+  res.json(payments);
+});
+app.post("/admin/approve", async (req,res)=>{
+  const {id} = req.body;
+
+  const payment = await Payment.findById(id);
+  payment.status = "approved";
+
+  const user = await User.findOne({ email: payment.email });
+  user.balance += payment.amount;
+
+  await payment.save();
+  await user.save();
+
+  res.json({message:"Payment approved"});
+});
