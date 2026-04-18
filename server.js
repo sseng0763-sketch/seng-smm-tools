@@ -140,3 +140,36 @@ app.listen(5000, ()=>{
   console.log("Server running...");
 });
 npm install axios
+const express = require("express");
+const axios = require("axios");
+const app = express();
+
+app.use(express.json());
+
+// SMM API config
+const API_URL = "https://provider.com/api/v2";
+const API_KEY = "YOUR_API_KEY";
+
+// CREATE ORDER
+app.post("/order", async (req,res)=>{
+  const {service, link, quantity} = req.body;
+
+  try{
+    const response = await axios.post(API_URL, {
+      key: API_KEY,
+      action: "add",
+      service: service,
+      link: link,
+      quantity: quantity
+    });
+
+    res.json(response.data);
+
+  } catch(err){
+    res.json({error:"API failed"});
+  }
+});
+
+app.listen(5000, ()=>{
+  console.log("Server running...");
+});
