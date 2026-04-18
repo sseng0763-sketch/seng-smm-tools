@@ -67,3 +67,9 @@ loadOrders();
 
 </body>
 </html>
+<script>
+if(localStorage.getItem("role") !== "admin"){
+  alert("Access denied");
+  window.location.href = "login.html";
+}
+</script>
