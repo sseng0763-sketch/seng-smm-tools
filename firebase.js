@@ -71,3 +71,11 @@ async function generate() {
 
   await sendTelegram(caption);
 }
+import { auth, GoogleAuthProvider, signInWithPopup } from "./firebase.js";
+
+function login() {
+  signInWithPopup(auth, new GoogleAuthProvider())
+    .then(user => {
+      console.log(user.user.displayName);
+    });
+}
