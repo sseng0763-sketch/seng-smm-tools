@@ -173,3 +173,4 @@ app.post("/order", async (req,res)=>{
 app.listen(5000, ()=>{
   console.log("Server running...");
 });
+node server.js
